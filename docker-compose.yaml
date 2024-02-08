@@ -1,0 +1,57 @@
+version: "3.0"
+
+services:
+
+  backend:
+    depends_on:
+      - database
+      - cache
+    build: .
+    env_file:
+      - .env
+    networks:
+      - node-network
+    hostname: api-host
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs # Mount logs directory to container
+
+  database:
+    image: mongo:latest
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASS}
+      - MONGO_INITDB_DATABASE=${MONGODB_DB_NAME}
+    networks:
+      - node-network
+    hostname: mongo-host
+    ports:
+      - "${MONGODB_PORT}:${MONGODB_PORT}"
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db # Mount MongoDB data directory to container
+
+  cache:
+    image: redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - node-network
+    hostname: redis-host
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data # Mount Redis data directory to container
+
+volumes:
+  mongodb_data: {} # Define volume for MongoDB data
+  redis_data: {} # Define volume for Redis data
+
+networks:
+  node-network:
+    driver: bridge

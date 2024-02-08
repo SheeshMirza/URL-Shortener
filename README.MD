@@ -23,7 +23,7 @@ This project is a URL shortener service implemented as a REST API using Node.js,
 
 ### Getting Started
 
-1. **Clone the Repository:** `git clone <repository-url>`
+1. **Clone the Repository:** `git clone https://www.github.com/sheeshmirza/url-shortener.git`
 2. **Install Dependencies:** `npm install`
 3. **Set Up Environment Variables:**
    - Create a `.env` file based on the provided `.env.example` file.
@@ -33,20 +33,42 @@ This project is a URL shortener service implemented as a REST API using Node.js,
 
 ### API Endpoints
 
-- **POST /api/shorten**
+- **POST /api/url**
 
   - **Payload:**
     ```json
     {
-      "longUrl": "https://example.com",
-      "qrCode": true
+      "longUrl": "https://example.com"
     }
     ```
   - **Response:**
     ```json
     {
-      "shortUrl": "http://localhost:3000/abc123",
-      "shortUrlQR": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAA..."
+      "success": true,
+      "message": "success",
+      "shortUrl": {
+        "shortUrl": "https://example.com/abcXYZ"
+      }
+    }
+    ```
+
+- **POST /api/url?qrCode=true**
+
+  - **Payload:**
+    ```json
+    {
+      "longUrl": "https://example.com"
+    }
+    ```
+  - **Response:**
+    ```json
+    {
+      "success": true,
+      "message": "success",
+      "shortUrl": {
+        "shortUrl": "https://example.com/abcXYZ",
+        "shortUrlQR": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcI..."
+      }
     }
     ```
   - **Description:** Shorten a long URL and optionally generate a QR code.
